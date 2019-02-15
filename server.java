@@ -12,6 +12,7 @@ import org.json.simple.parser.ParseException;
 
 public class Server {
 
+    @SuppressWarnings("unchecked")
     public static void main(String[] args) throws IOException {
          
         if (args.length != 1) {
@@ -47,6 +48,7 @@ public class Server {
     }
 
     //Write question to a file
+    @SuppressWarnings("unchecked")
     public static void writeQuestion(String question){
         
         JSONObject obj = new JSONObject();
@@ -72,6 +74,7 @@ public class Server {
     }
 
     //Read for a file
+    @SuppressWarnings("unchecked")
     public static void printQuestion(int n){
         JSONParser parser = new JSONParser();
 
