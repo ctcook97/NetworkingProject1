@@ -12,60 +12,30 @@ import org.json.simple.parser.ParseException;
 
 public class Server {
 
-    @SuppressWarnings("unchecked")
-    public static void main(String[] args) throws IOException {
-         
-        if (args.length != 1) {
-            System.err.println("Usage: java Server <port number>");
-            System.exit(1);
-        }
-         
-        int portNumber = Integer.parseInt(args[0]);
-
-        while(true){
-            try (
-                //Set up server socket
-                ServerSocket serverSocket = new ServerSocket(Integer.parseInt(args[0]));
-                Socket clientSocket = serverSocket.accept();     
-                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);                   
-                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            ) {
-                //Read lines from client
-                String inputLine;
-                while ((inputLine = in.readLine()) != null) {
-                    
-                    writeQuestion(inputLine);
-                    printQuestion(0);
-
-                    out.println(inputLine);
-                }
-            } catch (IOException e) {
-                System.out.println("Exception caught when trying to listen on port " + portNumber + " or listening for a connection");
-                System.out.println(e.getMessage());
-            }
-        }
-
-    }
+    static JSONArray questions = new JSONArray();
 
     //Write question to a file
     @SuppressWarnings("unchecked")
-    public static void writeQuestion(String question){
+    public static void writeQuestion(String input){
         
-        JSONObject obj = new JSONObject();
-        obj.put("number", 21);
-        obj.put("tag", "presidents, US history");
-        obj.put("text", "Which is the first president of the USA");
-        obj.put("answer", "c");
+        JSONObject question = new JSONObject();
+        question.put("number", 21);
+        question.put("tag", "presidents, US history");
+        question.put("text", "Which is the first president of the USA");
+        question.put("answer", "c");
 
         JSONArray list = new JSONArray();
         list.add("(a) Thomas Jefferson");
         list.add("(b) Abraham Lincoln");
         list.add("(c) George Washington");
         list.add("(d) Benjamin Franklin");
-        obj.put("answers", list);
+        question.put("answers", list);
+
+        questions.add(question);
+        questions.add(question);
 
         try (FileWriter file = new FileWriter("qbank.json")) {
-            file.write(obj.toJSONString());
+            file.write(questions.toJSONString());
             file.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -99,6 +69,40 @@ public class Server {
             e.printStackTrace();
         } catch (ParseException e) {
             e.printStackTrace();
+        }
+
+    }
+
+    public static void main(String[] args) throws IOException {
+         
+        if (args.length != 1) {
+            System.err.println("Usage: java Server <port number>");
+            System.exit(1);
+        }
+         
+        int portNumber = Integer.parseInt(args[0]);
+
+        while(true){
+            try (
+                //Set up server socket
+                ServerSocket serverSocket = new ServerSocket(Integer.parseInt(args[0]));
+                Socket clientSocket = serverSocket.accept();     
+                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);                   
+                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            ) {
+                //Read lines from client
+                String inputLine;
+                while ((inputLine = in.readLine()) != null) {
+                    
+                    writeQuestion(inputLine);
+                    //printQuestion(0);
+
+                    out.println(inputLine);
+                }
+            } catch (IOException e) {
+                System.out.println("Exception caught when trying to listen on port " + portNumber + " or listening for a connection");
+                System.out.println(e.getMessage());
+            }
         }
 
     }
