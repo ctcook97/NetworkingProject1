@@ -55,26 +55,13 @@ public class Server {
 
     }
 
-    //Read for a file
-    @SuppressWarnings("unchecked")
-    public static void printQuestion(int n){
+    //To be ran on start, loads the questions from file
+    public static void loadQuestions(){
         JSONParser parser = new JSONParser();
 
         try {
             Object obj = parser.parse(new FileReader("qbank.json"));
-            JSONObject jsonObject = (JSONObject) obj;
-
-            long number = (long) jsonObject.get("number");
-            System.out.println("number: " + number);
-
-            String question = (String) jsonObject.get("text");
-            System.out.println(question);
-
-            JSONArray answers = (JSONArray) jsonObject.get("answers");
-            Iterator<String> iterator = answers.iterator();
-            while (iterator.hasNext()) {
-                System.out.println(iterator.next());
-            }
+            questions = (JSONArray) obj;
         } catch(FileNotFoundException e) {
             e.printStackTrace();
         } catch(IOException e) {
@@ -82,7 +69,34 @@ public class Server {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+    }
 
+    @SuppressWarnings("unchecked")
+    public static void getRandomQuestion(){
+        // boolean questionFound = false;
+        // for(int i = 0; i < questions.size(); ++i){
+        //     JSONObject obj = (JSONObject) questions.get(i);
+        //     if( Integer.parseInt(obj.get("number").toString()) == n){
+        //         questionFound = true;
+        //         System.out.println((String) jsonObject.get("text"));
+        //         JSONArray answers = (JSONArray) obj.get("answers");
+        //         Iterator<String> iterator = obj.iterator();
+        //         while (iterator.hasNext()) {
+        //             System.out.println(iterator.next());
+        //         }
+        //     }  
+        // }
+        // if (! questionFound){
+        //     System.out.println("Question " + n + " was not found");
+        // }
+        int num = (int) (Math.random()*questions.size());
+        JSONObject obj = (JSONObject) questions.get(num);
+        System.out.println((String) obj.get("text"));
+        JSONArray answers = (JSONArray) obj.get("answers");
+        Iterator<String> iterator = answers.iterator();
+        while (iterator.hasNext()) {
+            System.out.println(iterator.next());
+        }
     }
 
     public static void main(String[] args) throws IOException {
@@ -93,6 +107,7 @@ public class Server {
         }
          
         int portNumber = Integer.parseInt(args[0]);
+        loadQuestions();
 
         while(true){
             try (
@@ -106,8 +121,10 @@ public class Server {
                 String inputLine;
                 while ((inputLine = in.readLine()) != null) {
                     
+
+                    getRandomQuestion();
                     writeQuestion(inputLine);
-                    //printQuestion(0);
+                    
 
                     out.println(inputLine);
                 }
