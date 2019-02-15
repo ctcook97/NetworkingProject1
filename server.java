@@ -5,10 +5,8 @@
 import java.net.*;
 import java.io.*;
 import java.nio.file.*;
- 
-public class Server {
 
-    
+public class Server {
 
     public static void main(String[] args) throws IOException {
          
@@ -46,12 +44,18 @@ public class Server {
     //Write question to a file
     public static void writeQuestion(String question){
         try {
+            question += "\n";
             Files.write(Paths.get("qbank.5"), question.getBytes(), StandardOpenOption.APPEND);
         }
         catch (IOException e) {
             System.out.println("Could not write to question bank");
             System.out.println(e.getMessage());
         }
+    }
+
+    //Read for a file
+    public static String readQuestion(){
+        
     }
 
 }
