@@ -13,13 +13,14 @@ public class Test {
         obj.put("age", 10210);
 
         JSONArray list = new JSONArray();
-        list.add("msg 1");
-        list.add("msg 2");
-        list.add("msg 3");
+        list.add("(a) Thomas Jefferson");
+        list.add("(b) Abraham Lincoln");
+        list.add("(c) George Washington");
+        list.add("(d) Benjamin Franklin");
 
-        obj.put("messages", list);
+        obj.put("answers", list);
 
-        try (FileWriter file = new FileWriter("f:\\test.json")) {
+        try (FileWriter file = new FileWriter("test.json")) {
 
             file.write(obj.toJSONString());
             file.flush();

@@ -4,7 +4,11 @@
 
 import java.net.*;
 import java.io.*;
-import java.nio.file.*;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import java.util.Iterator;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 public class Server {
 
@@ -30,6 +34,7 @@ public class Server {
                 while ((inputLine = in.readLine()) != null) {
                     
                     writeQuestion(inputLine);
+                    printQuestion(0);
 
                     out.println(inputLine);
                 }
@@ -43,19 +48,56 @@ public class Server {
 
     //Write question to a file
     public static void writeQuestion(String question){
-        try {
-            question += "\n";
-            Files.write(Paths.get("qbank.5"), question.getBytes(), StandardOpenOption.APPEND);
+        
+        JSONObject obj = new JSONObject();
+        obj.put("number", 21);
+        obj.put("tag", "presidents, US history");
+        obj.put("text", "Which is the first president of the USA");
+        obj.put("answer", "c");
+
+        JSONArray list = new JSONArray();
+        list.add("(a) Thomas Jefferson");
+        list.add("(b) Abraham Lincoln");
+        list.add("(c) George Washington");
+        list.add("(d) Benjamin Franklin");
+        obj.put("answers", list);
+
+        try (FileWriter file = new FileWriter("qbank.json")) {
+            file.write(obj.toJSONString());
+            file.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        catch (IOException e) {
-            System.out.println("Could not write to question bank");
-            System.out.println(e.getMessage());
-        }
+
     }
 
     //Read for a file
-    public static String readQuestion(){
-        
+    public static void printQuestion(int n){
+        JSONParser parser = new JSONParser();
+
+        try {
+            Object obj = parser.parse(new FileReader("qbank.json"));
+            JSONObject jsonObject = (JSONObject) obj;
+
+            long number = (long) jsonObject.get("number");
+            System.out.println("number: " + number);
+
+            String question = (String) jsonObject.get("text");
+            System.out.println(question);
+
+            JSONArray answers = (JSONArray) jsonObject.get("answers");
+            Iterator<String> iterator = answers.iterator();
+            while (iterator.hasNext()) {
+                System.out.println(iterator.next());
+            }
+        } catch(FileNotFoundException e) {
+            e.printStackTrace();
+        } catch(IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }
