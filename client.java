@@ -1,6 +1,4 @@
-/*Written by Cameron Cook
-*Some code was taken from https://docs.oracle.com/javase/tutorial/networking/sockets/
-*/
+//Cameron Cook
 
 import java.io.*;
 import java.net.*;

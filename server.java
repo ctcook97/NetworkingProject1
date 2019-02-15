@@ -1,6 +1,4 @@
-/*Written by Cameron Cook
-*Some code was taken from https://docs.oracle.com/javase/tutorial/networking/sockets/
-*/
+//Cameron Cook
 
 import java.net.*;
 import java.io.*;
@@ -32,7 +30,21 @@ public class Server {
         question.put("answers", list);
 
         questions.add(question);
-        questions.add(question);
+
+        //Adding to test with multiple questions
+        JSONObject question2 = new JSONObject();
+        question2.put("number", 24);
+        question2.put("tag", "presidents, US future");
+        question2.put("text", "Who will be the next president of the United States");
+        question2.put("answer", "a");
+        JSONArray list2 = new JSONArray();
+        list2.add("(a) Cameron Cook");
+        list2.add("(b) Donald Trump");
+        list2.add("(c) Kamala Harris");
+        list2.add("(d) Ben Franklin");
+        question2.put("answers", list2);
+        questions.add(question2);
+        //End of multiple questions test
 
         try (FileWriter file = new FileWriter("qbank.json")) {
             file.write(questions.toJSONString());
