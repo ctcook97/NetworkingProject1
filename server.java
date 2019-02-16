@@ -48,25 +48,10 @@ public class Server {
     //Write question to a file
     @SuppressWarnings("unchecked")
     public static void writeQuestion(){
-        
-        // //Add example question
-        // JSONObject question = new JSONObject();
-        // question.put("number", 21);
-        // question.put("tag", "presidents, US history");
-        // question.put("text", "Which is the first president of the USA");
-        // question.put("answer", "c");
-        // JSONArray list = new JSONArray();
-        // list.add("(a) Thomas Jefferson");
-        // list.add("(b) Abraham Lincoln");
-        // list.add("(c) George Washington");
-        // list.add("(d) Benjamin Franklin");
-        // question.put("answers", list);
-        // questions.add(question);
-        // //End example question
 
         try {
             JSONObject newQuestion = new JSONObject();
-
+// System.out.println("6");
             String s = in.readLine();
             newQuestion.put("tag", s);
             String questionText = "";
@@ -78,12 +63,12 @@ public class Server {
             }
             questionText = questionText.substring(0, questionText.length()-1);
             newQuestion.put("text", questionText); //take off trailing new line
-
+// System.out.println("5");
             JSONArray answers = new JSONArray();
             String answerText = "placeholder";
             while(! answerText.equals("")){
                 answerText = "";
-
+// System.out.println("4");
                 while((s = in.readLine()) != null) {
                     if (s.equals(".")) { 
                         break;
@@ -92,7 +77,7 @@ public class Server {
                         answerText = answerText + s + "\n";
                     }
                 }
-
+// System.out.println("3");
                 if(! answerText.equals("")){
                     answerText = answerText.substring(0,answerText.length()-1);
                     answers.add(answerText);
@@ -102,9 +87,18 @@ public class Server {
 
             String answer = in.readLine();
             newQuestion.put("answer", answer);
-
-            newQuestion.put("number", 12); //Assign in a minute
-
+// System.out.println("2");
+            newQuestion.put("number", 12);
+            if (questions.size() == 0){
+                newQuestion.put("number", 1);
+            }
+            else {
+                JSONObject obj = (JSONObject) questions.get(questions.size()-1);
+                int num = Integer.parseInt(obj.get("number").toString()) + 1; //Print this out
+                newQuestion.put("number", num);
+                //out.println(num);
+            }
+// System.out.println("1");
             questions.add(newQuestion);
 
         } catch (IOException e) {
@@ -121,7 +115,7 @@ public class Server {
 
     }
 
-
+    //Need to switch to print on client side
     @SuppressWarnings("unchecked")
     public static void getRandomQuestion(){
         // boolean questionFound = false;
@@ -150,7 +144,25 @@ public class Server {
         }
     }
 
-    public static void main(String[] args) throws IOException {
+    //Need to switch to print on client side
+    public static void deleteQuestion(int n){
+        int index = -1;
+        for(int i = 0; i < questions.size(); ++i) {
+            JSONObject obj = (JSONObject) questions.get(i);
+            if(Integer.parseInt(obj.get("number").toString()) == n){
+                index = i;
+                break;
+            }
+        }
+        if (index > -1) {
+            questions.remove(index);
+        }
+        else {
+            System.out.println("Error: question " + n + " not found");
+        }
+    }
+
+    public static void main(String[] args) throws IOException { //server currently stops if client does
          
         if (args.length != 1) {
             System.err.println("Usage: java Server <port number>");
@@ -161,9 +173,11 @@ public class Server {
         //loadQuestions(); - currently an error if there are no questions
         setUpServer(portNumber);
 
-
-
         writeQuestion();
+// System.out.println("debug");
+        writeQuestion();
+        deleteQuestion(1);
+
 
         String inputLine;
         while ((inputLine = in.readLine()) != null) {

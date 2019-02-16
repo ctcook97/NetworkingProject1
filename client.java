@@ -25,6 +25,11 @@ public class Client {
             while ((userInput = stdIn.readLine()) != null) {
                 out.println(userInput);
                 // System.out.println("Client received: " + in.readLine());
+
+                // Need to take messages from server
+                // if (in.readLine() != null){
+                //     System.out.println(in.readLine());
+                // }
             }
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + hostName);
