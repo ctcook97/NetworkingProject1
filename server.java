@@ -45,13 +45,11 @@ public class Server {
         }
     }
 
-    //Write question to a file
     @SuppressWarnings("unchecked")
     public static void writeQuestion(){
 
         try {
             JSONObject newQuestion = new JSONObject();
-// System.out.println("6");
             String s = in.readLine();
             newQuestion.put("tag", s);
             String questionText = "";
@@ -62,13 +60,11 @@ public class Server {
                 questionText = questionText + s + "\n";
             }
             questionText = questionText.substring(0, questionText.length()-1);
-            newQuestion.put("text", questionText); //take off trailing new line
-// System.out.println("5");
+            newQuestion.put("text", questionText); 
             JSONArray answers = new JSONArray();
             String answerText = "placeholder";
             while(! answerText.equals("")){
                 answerText = "";
-// System.out.println("4");
                 while((s = in.readLine()) != null) {
                     if (s.equals(".")) { 
                         break;
@@ -77,7 +73,6 @@ public class Server {
                         answerText = answerText + s + "\n";
                     }
                 }
-// System.out.println("3");
                 if(! answerText.equals("")){
                     answerText = answerText.substring(0,answerText.length()-1);
                     answers.add(answerText);
@@ -87,18 +82,17 @@ public class Server {
 
             String answer = in.readLine();
             newQuestion.put("answer", answer);
-// System.out.println("2");
             newQuestion.put("number", 12);
             if (questions.size() == 0){
                 newQuestion.put("number", 1);
             }
             else {
                 JSONObject obj = (JSONObject) questions.get(questions.size()-1);
-                int num = Integer.parseInt(obj.get("number").toString()) + 1; //Print this out
+                int num = Integer.parseInt(obj.get("number").toString()) + 1; 
                 newQuestion.put("number", num);
                 //out.println(num);
+                //need to print that on client side
             }
-// System.out.println("1");
             questions.add(newQuestion);
 
         } catch (IOException e) {
@@ -118,22 +112,7 @@ public class Server {
     //Need to switch to print on client side
     @SuppressWarnings("unchecked")
     public static void getRandomQuestion(){
-        // boolean questionFound = false;
-        // for(int i = 0; i < questions.size(); ++i){
-        //     JSONObject obj = (JSONObject) questions.get(i);
-        //     if( Integer.parseInt(obj.get("number").toString()) == n){
-        //         questionFound = true;
-        //         System.out.println((String) jsonObject.get("text"));
-        //         JSONArray answers = (JSONArray) obj.get("answers");
-        //         Iterator<String> iterator = obj.iterator();
-        //         while (iterator.hasNext()) {
-        //             System.out.println(iterator.next());
-        //         }
-        //     }  
-        // }
-        // if (! questionFound){
-        //     System.out.println("Question " + n + " was not found");
-        // }
+
         int num = (int) (Math.random()*questions.size());
         JSONObject obj = (JSONObject) questions.get(num);
         System.out.println((String) obj.get("text"));
@@ -160,7 +139,65 @@ public class Server {
         else {
             System.out.println("Error: question " + n + " not found");
         }
+
+        //Write to file
+        try (FileWriter file = new FileWriter("qbank.json")) {
+            file.write(questions.toJSONString());
+            file.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
+    public static void checkQuestion(String s){
+        int index = s.indexOf(" ");
+        int num = Integer.parseInt(s.substring(0,index));
+        s = s.substring(index+1);
+        index = -1;
+        for(int i = 0; i < questions.size(); ++i) {
+            JSONObject obj = (JSONObject) questions.get(i);
+            if(Integer.parseInt(obj.get("number").toString()) == num){
+                index = i;
+                break;
+            }
+        }
+        if (index > -1) {
+            JSONObject obj = (JSONObject) questions.get(index);
+            String answer = (String) obj.get("answer");
+            if (s.equals(answer)){
+                System.out.println("Correct");
+            }
+            else {
+                System.out.println("Incorrect");
+            }
+        }
+        else {
+            System.out.println("Error: question " + num + " not found");
+        }
+    }
+
+    //get question is pretty much this (taken from random question) but printed to client
+        // boolean questionFound = false;
+        // for(int i = 0; i < questions.size(); ++i){
+        //     JSONObject obj = (JSONObject) questions.get(i);
+        //     if( Integer.parseInt(obj.get("number").toString()) == n){
+        //         questionFound = true;
+        //         System.out.println((String) jsonObject.get("text"));
+        //         JSONArray answers = (JSONArray) obj.get("answers");
+        //         Iterator<String> iterator = obj.iterator();
+        //         while (iterator.hasNext()) {
+        //             System.out.println(iterator.next());
+        //         }
+        //     }  
+        // }
+        // if (! questionFound){
+        //     System.out.println("Question " + n + " was not found");
+        // }
+
+
+    //TO IMPLEMENT
+    //help option
+    //close server
 
     public static void main(String[] args) throws IOException { //server currently stops if client does
          
@@ -174,7 +211,9 @@ public class Server {
         setUpServer(portNumber);
 
         writeQuestion();
-// System.out.println("debug");
+        checkQuestion("1 a");
+        checkQuestion("1 b");
+        checkQuestion("2 c");
         writeQuestion();
         deleteQuestion(1);
 
