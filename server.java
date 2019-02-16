@@ -49,52 +49,68 @@ public class Server {
     @SuppressWarnings("unchecked")
     public static void writeQuestion(){
         
-        //Adding example question
-        JSONObject question = new JSONObject();
-        question.put("number", 21);
-        question.put("tag", "presidents, US history");
-        question.put("text", "Which is the first president of the USA");
-        question.put("answer", "c");
-
-        JSONArray list = new JSONArray();
-        list.add("(a) Thomas Jefferson");
-        list.add("(b) Abraham Lincoln");
-        list.add("(c) George Washington");
-        list.add("(d) Benjamin Franklin");
-        question.put("answers", list);
-
-        questions.add(question);
-
-        System.out.println("Taking question information");
+        // //Add example question
+        // JSONObject question = new JSONObject();
+        // question.put("number", 21);
+        // question.put("tag", "presidents, US history");
+        // question.put("text", "Which is the first president of the USA");
+        // question.put("answer", "c");
+        // JSONArray list = new JSONArray();
+        // list.add("(a) Thomas Jefferson");
+        // list.add("(b) Abraham Lincoln");
+        // list.add("(c) George Washington");
+        // list.add("(d) Benjamin Franklin");
+        // question.put("answers", list);
+        // questions.add(question);
+        // //End example question
 
         try {
             JSONObject newQuestion = new JSONObject();
 
             String s = in.readLine();
             newQuestion.put("tag", s);
-            out.println("Question tags " + s + " were added");
             String questionText = "";
             while ((s = in.readLine()) != null) {
                 if (s.equals(".")){
                     break;
-                }
-                questionText = questionText + s;
-                out.println("echo: "+ s);
+                }  
+                questionText = questionText + s + "\n";
             }
-            newQuestion.put("text", questionText);
-            out.println(questionText);
+            questionText = questionText.substring(0, questionText.length()-1);
+            newQuestion.put("text", questionText); //take off trailing new line
+
+            JSONArray answers = new JSONArray();
+            String answerText = "placeholder";
+            while(! answerText.equals("")){
+                answerText = "";
+
+                while((s = in.readLine()) != null) {
+                    if (s.equals(".")) { 
+                        break;
+                    }
+                    else {
+                        answerText = answerText + s + "\n";
+                    }
+                }
+
+                if(! answerText.equals("")){
+                    answerText = answerText.substring(0,answerText.length()-1);
+                    answers.add(answerText);
+                }
+            }
+            newQuestion.put("answers", answers);
+
+            String answer = in.readLine();
+            newQuestion.put("answer", answer);
+
+            newQuestion.put("number", 12); //Assign in a minute
 
             questions.add(newQuestion);
-
-
-
 
         } catch (IOException e) {
             e.printStackTrace();
         }
         
-        System.out.println("Question info was taken in");
-
         //Write to file
         try (FileWriter file = new FileWriter("qbank.json")) {
             file.write(questions.toJSONString());
@@ -145,15 +161,19 @@ public class Server {
         //loadQuestions(); - currently an error if there are no questions
         setUpServer(portNumber);
 
-        // String inputLine;
-        // while ((inputLine = in.readLine()) != null) {
-        //     out.println("echo: "+ inputLine);
-        // }
+
 
         writeQuestion();
+
+        String inputLine;
+        while ((inputLine = in.readLine()) != null) {
+            getRandomQuestion();
+        }
+
         out.println("Question was written");
         
 
     }
 
 }
+
