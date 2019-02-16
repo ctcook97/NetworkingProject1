@@ -12,47 +12,21 @@ public class Server {
 
     static JSONArray questions = new JSONArray();
 
-    //Write question to a file
-    @SuppressWarnings("unchecked")
-    public static void writeQuestion(String input){
-        
-        JSONObject question = new JSONObject();
-        question.put("number", 21);
-        question.put("tag", "presidents, US history");
-        question.put("text", "Which is the first president of the USA");
-        question.put("answer", "c");
+    static ServerSocket serverSocket;
+    static Socket clientSocket;     
+    static PrintWriter out;                   
+    static BufferedReader in;
 
-        JSONArray list = new JSONArray();
-        list.add("(a) Thomas Jefferson");
-        list.add("(b) Abraham Lincoln");
-        list.add("(c) George Washington");
-        list.add("(d) Benjamin Franklin");
-        question.put("answers", list);
-
-        questions.add(question);
-
-        //Adding to test with multiple questions
-        JSONObject question2 = new JSONObject();
-        question2.put("number", 24);
-        question2.put("tag", "presidents, US future");
-        question2.put("text", "Who will be the next president of the United States");
-        question2.put("answer", "a");
-        JSONArray list2 = new JSONArray();
-        list2.add("(a) Cameron Cook");
-        list2.add("(b) Donald Trump");
-        list2.add("(c) Kamala Harris");
-        list2.add("(d) Ben Franklin");
-        question2.put("answers", list2);
-        questions.add(question2);
-        //End of multiple questions test
-
-        try (FileWriter file = new FileWriter("qbank.json")) {
-            file.write(questions.toJSONString());
-            file.flush();
+    public static void setUpServer(int port){
+        try {
+            serverSocket = new ServerSocket(port);
+            clientSocket = serverSocket.accept();     
+            out = new PrintWriter(clientSocket.getOutputStream(), true);                   
+            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Exception caught when trying to listen on port " + port + " or listening for a connection");
+            System.out.println(e.getMessage());
         }
-
     }
 
     //To be ran on start, loads the questions from file
@@ -70,6 +44,67 @@ public class Server {
             e.printStackTrace();
         }
     }
+
+    //Write question to a file
+    @SuppressWarnings("unchecked")
+    public static void writeQuestion(){
+        
+        //Adding example question
+        JSONObject question = new JSONObject();
+        question.put("number", 21);
+        question.put("tag", "presidents, US history");
+        question.put("text", "Which is the first president of the USA");
+        question.put("answer", "c");
+
+        JSONArray list = new JSONArray();
+        list.add("(a) Thomas Jefferson");
+        list.add("(b) Abraham Lincoln");
+        list.add("(c) George Washington");
+        list.add("(d) Benjamin Franklin");
+        question.put("answers", list);
+
+        questions.add(question);
+
+        System.out.println("Taking question information");
+
+        try {
+            JSONObject newQuestion = new JSONObject();
+
+            String s = in.readLine();
+            newQuestion.put("tag", s);
+            out.println("Question tags " + s + " were added");
+            String questionText = "";
+            while ((s = in.readLine()) != null) {
+                if (s.equals(".")){
+                    break;
+                }
+                questionText = questionText + s;
+                out.println("echo: "+ s);
+            }
+            newQuestion.put("text", questionText);
+            out.println(questionText);
+
+            questions.add(newQuestion);
+
+
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        System.out.println("Question info was taken in");
+
+        //Write to file
+        try (FileWriter file = new FileWriter("qbank.json")) {
+            file.write(questions.toJSONString());
+            file.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     @SuppressWarnings("unchecked")
     public static void getRandomQuestion(){
@@ -107,32 +142,17 @@ public class Server {
         }
          
         int portNumber = Integer.parseInt(args[0]);
-        loadQuestions();
+        //loadQuestions(); - currently an error if there are no questions
+        setUpServer(portNumber);
 
-        while(true){
-            try (
-                //Set up server socket
-                ServerSocket serverSocket = new ServerSocket(Integer.parseInt(args[0]));
-                Socket clientSocket = serverSocket.accept();     
-                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);                   
-                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            ) {
-                //Read lines from client
-                String inputLine;
-                while ((inputLine = in.readLine()) != null) {
-                    
+        // String inputLine;
+        // while ((inputLine = in.readLine()) != null) {
+        //     out.println("echo: "+ inputLine);
+        // }
 
-                    getRandomQuestion();
-                    writeQuestion(inputLine);
-                    
-
-                    out.println(inputLine);
-                }
-            } catch (IOException e) {
-                System.out.println("Exception caught when trying to listen on port " + portNumber + " or listening for a connection");
-                System.out.println(e.getMessage());
-            }
-        }
+        writeQuestion();
+        out.println("Question was written");
+        
 
     }
 
