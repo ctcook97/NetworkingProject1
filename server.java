@@ -134,9 +134,10 @@ public class Server {
         }
         if (index > -1) {
             questions.remove(index);
+            out.println("Deleted question " + n);
         }
         else {
-            System.out.println("Error: question " + n + " not found");
+            out.println("Error: question " + n + " not found");
         }
 
         //Write to file
@@ -219,6 +220,7 @@ public class Server {
 
         String inputLine;
         while ((inputLine = in.readLine()) != null) { //quits because this becomes false when while loop is executed. Whole thing needs to be wrapped in while loop
+            System.out.println(inputLine);
             switch(inputLine.charAt(0)) {
                 case 'p':
                     System.out.println("put mode");
@@ -226,7 +228,8 @@ public class Server {
                     break;
                 case 'd':
                     System.out.println("delete mode");
-                    deleteQuestion(0); //change to actual int
+                    System.out.println(inputLine);
+                    deleteQuestion(Integer.parseInt(inputLine.substring(2))); //change to actual int
                     break;
                 case 'g':
                     System.out.println("get mode");

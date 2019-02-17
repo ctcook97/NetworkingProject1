@@ -56,9 +56,14 @@ public class Client {
 
     }
 
-    public static void deleteMode(){
-        out.println("d");
-        System.out.println("deleteMode");
+    public static void deleteMode(String input){
+        try {
+            System.out.println("deleteMode");
+            out.println(input);
+            System.out.println(in.readLine());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void getMode(){
@@ -107,7 +112,7 @@ public class Client {
                     putMode();
                     break;
                 case 'd':
-                    deleteMode();
+                    deleteMode(userInput);
                     break;
                 case 'g':
                     getMode();
