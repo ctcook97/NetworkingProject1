@@ -26,31 +26,58 @@ public class Client {
     }
 
     public static void putMode(){
-        System.out.println("putMode");
-        // out.println(stdIn.readLine()); //Question tag
-        // String userInput;
-        // while ((userInput = stdIn.readLine()) != null) {
+        
+        try {
+            System.out.println("putMode");
+            out.println("p");
+            out.println(stdIn.readLine()); //Question tag
+            boolean cont = true;
+            while(cont){ //Question and answers
+                String s;
+                cont = false;
+                while((s = stdIn.readLine()) != null) {
+                    out.println(s);
+                    if (s.equals(".")) { 
+                        break;
+                    }
+                    else {
+                        cont = true;                        
+                    }
+                }
+            }
+            out.println(stdIn.readLine()); //Correct answer
+            System.out.println(in.readLine());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        // }
+
+
+
     }
 
     public static void deleteMode(){
+        out.println("d");
         System.out.println("deleteMode");
     }
 
     public static void getMode(){
+        out.println("g");
         System.out.println("getMode");
     }
 
     public static void randomMode(){
+        out.println("r");
         System.out.println("randomMode");
     }
 
     public static void checkMode(){
+        out.println("c");
         System.out.println("checkMode");
     }
 
     public static void killMode(){
+        out.println("k");
         System.out.println("killMode");
     }
 
@@ -103,7 +130,7 @@ public class Client {
                 default:
                     System.out.println("Command not recognized. Please type 'h' for help.");
                     break;
-                }
+            }
 
                 //out.println(userInput);
         }

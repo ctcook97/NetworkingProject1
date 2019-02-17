@@ -79,19 +79,18 @@ public class Server {
                 }
             }
             newQuestion.put("answers", answers);
-
             String answer = in.readLine();
             newQuestion.put("answer", answer);
             newQuestion.put("number", 12);
             if (questions.size() == 0){
                 newQuestion.put("number", 1);
+                out.println(1);
             }
             else {
                 JSONObject obj = (JSONObject) questions.get(questions.size()-1);
                 int num = Integer.parseInt(obj.get("number").toString()) + 1; 
                 newQuestion.put("number", num);
-                //out.println(num);
-                //need to print that on client side
+                out.println(num);
             }
             questions.add(newQuestion);
 
@@ -210,18 +209,46 @@ public class Server {
         int portNumber = Integer.parseInt(args[0]);
         //loadQuestions(); - currently an error if there are no questions
         setUpServer(portNumber);
-
-        writeQuestion();
-        checkQuestion("1 a");
-        checkQuestion("1 b");
-        checkQuestion("2 c");
-        writeQuestion();
-        deleteQuestion(1);
+        // writeQuestion();
+        // checkQuestion("1 a");
+        // checkQuestion("1 b");
+        // checkQuestion("2 c");
+        // writeQuestion();
+        // deleteQuestion(1);
 
 
         String inputLine;
-        while ((inputLine = in.readLine()) != null) { //quits because this becomes false when while loop is executed
-            getRandomQuestion();
+        while ((inputLine = in.readLine()) != null) { //quits because this becomes false when while loop is executed. Whole thing needs to be wrapped in while loop
+            switch(inputLine.charAt(0)) {
+                case 'p':
+                    System.out.println("put mode");
+                    writeQuestion();
+                    break;
+                case 'd':
+                    System.out.println("delete mode");
+                    deleteQuestion(0); //change to actual int
+                    break;
+                case 'g':
+                    System.out.println("get mode");
+                    //getQuestion();
+                    break;
+                case 'r':
+                    System.out.println("get random mode");
+                    getRandomQuestion();
+                    break;
+                case 'c':
+                    checkQuestion(inputLine);
+                    break;
+                case 'k':
+                    //shutDownServer();
+                    break;
+                default:
+                    System.out.println("An unrecognized command was passed to the server");
+                    //shutDownServer();
+                    break;
+            }
+            
+            //getRandomQuestion();
         }
 
         out.println("Question was written");
