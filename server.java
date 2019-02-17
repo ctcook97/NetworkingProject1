@@ -198,6 +198,7 @@ public class Server {
     //TO IMPLEMENT
     //help option
     //close server
+    
 
     public static void main(String[] args) throws IOException { //server currently stops if client does
          
@@ -219,7 +220,7 @@ public class Server {
 
 
         String inputLine;
-        while ((inputLine = in.readLine()) != null) {
+        while ((inputLine = in.readLine()) != null) { //quits because this becomes false when while loop is executed
             getRandomQuestion();
         }
 
