@@ -24,6 +24,43 @@ public class Client {
             System.exit(1);
         } 
     }
+
+    public static void putMode(){
+        System.out.println("putMode");
+        // out.println(stdIn.readLine()); //Question tag
+        // String userInput;
+        // while ((userInput = stdIn.readLine()) != null) {
+
+        // }
+    }
+
+    public static void deleteMode(){
+        System.out.println("deleteMode");
+    }
+
+    public static void getMode(){
+        System.out.println("getMode");
+    }
+
+    public static void randomMode(){
+        System.out.println("randomMode");
+    }
+
+    public static void checkMode(){
+        System.out.println("checkMode");
+    }
+
+    public static void killMode(){
+        System.out.println("killMode");
+    }
+
+    public static void quitMode() {
+        System.out.println("quitMode");
+    }
+
+    public static void helpMode() {
+        System.out.println("helpMode");
+    }
     
     public static void main(String[] args) throws IOException {
          
@@ -38,13 +75,37 @@ public class Client {
         setUpClient(hostName, portNumber);
         String userInput;
         while ((userInput = stdIn.readLine()) != null) {
-                out.println(userInput);
-                // System.out.println("Client received: " + in.readLine());
+            switch(userInput.charAt(0)){
+                case 'p':
+                    putMode();
+                    break;
+                case 'd':
+                    deleteMode();
+                    break;
+                case 'g':
+                    getMode();
+                    break;
+                case 'r':
+                    randomMode();
+                    break;
+                case 'c':
+                    checkMode();
+                    break;
+                case 'k':
+                    killMode();
+                    break;
+                case 'q':
+                    quitMode();
+                    break;
+                case 'h':
+                    helpMode();
+                    break;
+                default:
+                    System.out.println("Command not recognized. Please type 'h' for help.");
+                    break;
+                }
 
-                // Need to take messages from server
-                // if (in.readLine() != null){
-                //     System.out.println(in.readLine());
-                // }
+                //out.println(userInput);
         }
 
     }
