@@ -194,9 +194,30 @@ public class Server {
         //     System.out.println("Question " + n + " was not found");
         // }
 
+    @SuppressWarnings("unchecked")
+    public static void getQuestion(int num){
+        boolean questionFound = false;
+        for(int i = 0; i < questions.size(); ++i){
+            JSONObject obj = (JSONObject) questions.get(i);
+            if (Integer.parseInt(obj.get("number").toString()) == num) {
+                questionFound = true;
+                out.println((String) obj.get("text"));
+                JSONArray answers = (JSONArray) obj.get("answers");
+                Iterator<String> iterator = answers.iterator();
+                while (iterator.hasNext()) {
+                    out.println(iterator.next());
+                }
+                out.println("."); //To signal to the client to stop listening
+            }
+        }
+        if (! questionFound){
+            out.println("Question " + num + " was not found");
+            out.println(".");
+        }
+    }
+
 
     //TO IMPLEMENT
-    //help option
     //close server
     
 
@@ -210,13 +231,6 @@ public class Server {
         int portNumber = Integer.parseInt(args[0]);
         //loadQuestions(); - currently an error if there are no questions
         setUpServer(portNumber);
-        // writeQuestion();
-        // checkQuestion("1 a");
-        // checkQuestion("1 b");
-        // checkQuestion("2 c");
-        // writeQuestion();
-        // deleteQuestion(1);
-
 
         String inputLine;
         while ((inputLine = in.readLine()) != null) { //quits because this becomes false when while loop is executed. Whole thing needs to be wrapped in while loop
@@ -228,12 +242,11 @@ public class Server {
                     break;
                 case 'd':
                     System.out.println("delete mode");
-                    System.out.println(inputLine);
                     deleteQuestion(Integer.parseInt(inputLine.substring(2))); //change to actual int
                     break;
                 case 'g':
                     System.out.println("get mode");
-                    //getQuestion();
+                    getQuestion(Integer.parseInt(inputLine.substring(2)));
                     break;
                 case 'r':
                     System.out.println("get random mode");

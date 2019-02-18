@@ -66,9 +66,20 @@ public class Client {
         }
     }
 
-    public static void getMode(){
-        out.println("g");
+    public static void getMode(String input){
         System.out.println("getMode");
+        out.println(input);
+        try {
+            String s;
+            while((s = in.readLine()) != null){
+                if(s.equals(".")) {
+                    break;
+                }
+                System.out.println(s);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void randomMode(){
@@ -105,7 +116,7 @@ public class Client {
         int portNumber = Integer.parseInt(args[1]);
  
         setUpClient(hostName, portNumber);
-        String userInput;
+        String userInput; //add space check
         while ((userInput = stdIn.readLine()) != null) {
             switch(userInput.charAt(0)){
                 case 'p':
@@ -115,7 +126,7 @@ public class Client {
                     deleteMode(userInput);
                     break;
                 case 'g':
-                    getMode();
+                    getMode(userInput);
                     break;
                 case 'r':
                     randomMode();
