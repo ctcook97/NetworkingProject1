@@ -111,6 +111,7 @@ public class Client {
         System.out.println("Help mode");
         System.out.println("Commands: ");
         System.out.println("Please pay careful attention to the formatting. Incorrect formatting could cause issues.");
+        System.out.println("Commands must be lowercase.");
         System.out.println("'p': put question");
         System.out.println("    Adds a qustion to the bank");
         System.out.println("    The next line you enter will be the question tags");
@@ -148,9 +149,15 @@ public class Client {
         int portNumber = Integer.parseInt(args[1]);
  
         setUpClient(hostName, portNumber);
-        String userInput; //add space check
+        String userInput;
         while ((userInput = stdIn.readLine()) != null) {
-            //add check for space
+            if(userInput.length() == 0){
+                continue;
+            }
+            if(userInput.length() > 1 && userInput.charAt(1) != (' ')){
+                System.out.println("Invalid command");
+                continue;
+            }
             switch(userInput.charAt(0)){
                 case 'p':
                     putMode();
