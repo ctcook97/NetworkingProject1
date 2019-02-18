@@ -205,12 +205,9 @@ public class Server {
 
     public static void main(String[] args) throws IOException { //server currently stops if client does
          
-        if (args.length != 1) {
-            System.err.println("Usage: java Server <port number>");
-            System.exit(1);
-        }
-         
         int portNumber = Integer.parseInt(args[0]);
+
+        System.out.println("Server running on port " + args[0]);
         //loadQuestions(); - currently an error if there are no questions
 
         serverSocket = new ServerSocket(portNumber);
