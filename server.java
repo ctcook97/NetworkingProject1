@@ -205,7 +205,12 @@ public class Server {
 
     public static void main(String[] args) throws IOException { //server currently stops if client does
 
-        serverSocket = new ServerSocket(0);
+        try {
+            serverSocket = new ServerSocket(0);
+        }
+        catch (BindException e) {
+            e.printStackTrace();
+        }
         System.out.println("Server running on port " + serverSocket.getLocalPort());
         loadQuestions();
 
