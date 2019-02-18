@@ -5,16 +5,16 @@ import java.net.*;
  
 public class Client {
 
-    static Socket echoSocket;
+    static Socket clientSocket;
     static PrintWriter out;
     static BufferedReader in;
     static BufferedReader stdIn;
 
     public static void setUpClient(String hostName, int portNumber) {
         try {
-            echoSocket = new Socket(hostName, portNumber);
-            out = new PrintWriter(echoSocket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
+            clientSocket = new Socket(hostName, portNumber);
+            out = new PrintWriter(clientSocket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             stdIn = new BufferedReader(new InputStreamReader(System.in));
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + hostName);
@@ -150,6 +150,7 @@ public class Client {
         setUpClient(hostName, portNumber);
         String userInput; //add space check
         while ((userInput = stdIn.readLine()) != null) {
+            //add check for space
             switch(userInput.charAt(0)){
                 case 'p':
                     putMode();

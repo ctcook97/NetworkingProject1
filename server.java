@@ -17,17 +17,6 @@ public class Server {
     static PrintWriter out;                   
     static BufferedReader in;
 
-    public static void setUpServer(int port){
-        try {
-            serverSocket = new ServerSocket(port);
-            clientSocket = serverSocket.accept();     
-            out = new PrintWriter(clientSocket.getOutputStream(), true);                   
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     //To be ran on start, loads the questions from file
     public static void loadQuestions(){
         JSONParser parser = new JSONParser();
@@ -214,13 +203,6 @@ public class Server {
         }
     }
 
-    public static void shutDownServer(){
-
-    }
-    //TO IMPLEMENT
-    //close server
-    
-
     public static void main(String[] args) throws IOException { //server currently stops if client does
          
         if (args.length != 1) {
@@ -230,33 +212,43 @@ public class Server {
          
         int portNumber = Integer.parseInt(args[0]);
         //loadQuestions(); - currently an error if there are no questions
-        setUpServer(portNumber);
 
-        String inputLine;
-        while ((inputLine = in.readLine()) != null) { //quits because this becomes false when while loop is executed. Whole thing needs to be wrapped in while loop
-            switch(inputLine.charAt(0)) {
-                case 'p':
-                    writeQuestion();
-                    break;
-                case 'd':
-                    deleteQuestion(Integer.parseInt(inputLine.substring(2)));
-                    break;
-                case 'g':
-                    getQuestion(Integer.parseInt(inputLine.substring(2)));
-                    break;
-                case 'r':
-                    getRandomQuestion();
-                    break;
-                case 'c':
-                    checkQuestion(inputLine);
-                    break;
-                case 'k':
-                    return;
-                default:
-                    System.out.println("An unrecognized command was passed to the server"); //for logging purposes
-                    return;
+        serverSocket = new ServerSocket(portNumber);
+        while(true) {
+            try {  
+                clientSocket = serverSocket.accept();     
+                out = new PrintWriter(clientSocket.getOutputStream(), true);                   
+                in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        }        
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) { 
+                switch(inputLine.charAt(0)) {
+                    case 'p':
+                        writeQuestion();
+                        break;
+                    case 'd':
+                        deleteQuestion(Integer.parseInt(inputLine.substring(2)));
+                        break;
+                    case 'g':
+                        getQuestion(Integer.parseInt(inputLine.substring(2)));
+                        break;
+                    case 'r':
+                        getRandomQuestion();
+                        break;
+                    case 'c':
+                        checkQuestion(inputLine);
+                        break;
+                    case 'k':
+                        System.out.println("Shutting down");
+                        return;
+                    default:
+                        System.out.println("An unrecognized command was passed to the server"); //for logging purposes
+                        return;
+                }
+            }    
+        }    
 
     }
 
