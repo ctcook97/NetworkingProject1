@@ -204,13 +204,10 @@ public class Server {
     }
 
     public static void main(String[] args) throws IOException { //server currently stops if client does
-         
-        int portNumber = Integer.parseInt(args[0]);
-        System.out.println("Server running on port " + args[0]);
 
+        serverSocket = new ServerSocket(0);
+        System.out.println("Server running on port " + serverSocket.getLocalPort());
         loadQuestions();
-
-        serverSocket = new ServerSocket(portNumber);
 
         while(true) {
             try {  
