@@ -188,8 +188,6 @@ public class Client {
                     System.out.println("Command not recognized. Please type 'h' for help.");
                     break;
             }
-
-                //out.println(userInput);
         }
 
     }

@@ -206,11 +206,12 @@ public class Server {
     public static void main(String[] args) throws IOException { //server currently stops if client does
          
         int portNumber = Integer.parseInt(args[0]);
-
         System.out.println("Server running on port " + args[0]);
-        //loadQuestions(); - currently an error if there are no questions
+
+        loadQuestions();
 
         serverSocket = new ServerSocket(portNumber);
+
         while(true) {
             try {  
                 clientSocket = serverSocket.accept();     
