@@ -85,6 +85,19 @@ public class Client {
     public static void randomMode(){
         out.println("r");
         System.out.println("randomMode");
+        try {
+            String s;
+            while((s = in.readLine()) != null){
+                if(s.equals(".")) {
+                    break;
+                }
+                System.out.println(s);
+            }
+            out.println(stdIn.readLine());
+            System.out.println(in.readLine());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void checkMode(){

@@ -109,16 +109,29 @@ public class Server {
     }
 
     //Need to switch to print on client side
+    //Error handling if there are no questions in bank?
     @SuppressWarnings("unchecked")
     public static void getRandomQuestion(){
 
-        int num = (int) (Math.random()*questions.size());
-        JSONObject obj = (JSONObject) questions.get(num);
-        System.out.println((String) obj.get("text"));
-        JSONArray answers = (JSONArray) obj.get("answers");
-        Iterator<String> iterator = answers.iterator();
-        while (iterator.hasNext()) {
-            System.out.println(iterator.next());
+        try {
+            int num = (int) (Math.random()*questions.size());
+            JSONObject obj = (JSONObject) questions.get(num);
+            out.println((String) obj.get("text"));
+            JSONArray answers = (JSONArray) obj.get("answers");
+            Iterator<String> iterator = answers.iterator();
+            while (iterator.hasNext()) {
+                out.println(iterator.next());
+            }
+            out.println(".");
+            String response = in.readLine();
+            if (response.equals(obj.get("answer"))){
+                out.println("Correct");
+            }
+            else {
+                out.println("Incorrect");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -176,24 +189,6 @@ public class Server {
         }
     }
 
-    //get question is pretty much this (taken from random question) but printed to client
-        // boolean questionFound = false;
-        // for(int i = 0; i < questions.size(); ++i){
-        //     JSONObject obj = (JSONObject) questions.get(i);
-        //     if( Integer.parseInt(obj.get("number").toString()) == n){
-        //         questionFound = true;
-        //         System.out.println((String) jsonObject.get("text"));
-        //         JSONArray answers = (JSONArray) obj.get("answers");
-        //         Iterator<String> iterator = obj.iterator();
-        //         while (iterator.hasNext()) {
-        //             System.out.println(iterator.next());
-        //         }
-        //     }  
-        // }
-        // if (! questionFound){
-        //     System.out.println("Question " + n + " was not found");
-        // }
-
     @SuppressWarnings("unchecked")
     public static void getQuestion(int num){
         boolean questionFound = false;
@@ -215,7 +210,6 @@ public class Server {
             out.println(".");
         }
     }
-
 
     //TO IMPLEMENT
     //close server
@@ -242,7 +236,7 @@ public class Server {
                     break;
                 case 'd':
                     System.out.println("delete mode");
-                    deleteQuestion(Integer.parseInt(inputLine.substring(2))); //change to actual int
+                    deleteQuestion(Integer.parseInt(inputLine.substring(2)));
                     break;
                 case 'g':
                     System.out.println("get mode");
@@ -263,12 +257,7 @@ public class Server {
                     //shutDownServer();
                     break;
             }
-            
-            //getRandomQuestion();
-        }
-
-        out.println("Question was written");
-        
+        }        
 
     }
 
