@@ -100,9 +100,13 @@ public class Client {
         }
     }
 
-    public static void checkMode(){
-        out.println("c");
-        System.out.println("checkMode");
+    public static void checkMode(String inputLine){
+        try {
+            out.println(inputLine);
+            System.out.println(in.readLine());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void killMode(){
@@ -145,7 +149,7 @@ public class Client {
                     randomMode();
                     break;
                 case 'c':
-                    checkMode();
+                    checkMode(userInput);
                     break;
                 case 'k':
                     killMode();

@@ -24,8 +24,7 @@ public class Server {
             out = new PrintWriter(clientSocket.getOutputStream(), true);                   
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         } catch (IOException e) {
-            System.out.println("Exception caught when trying to listen on port " + port + " or listening for a connection");
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -163,6 +162,7 @@ public class Server {
     }
 
     public static void checkQuestion(String s){
+        s = s.substring(2);
         int index = s.indexOf(" ");
         int num = Integer.parseInt(s.substring(0,index));
         s = s.substring(index+1);
@@ -178,14 +178,14 @@ public class Server {
             JSONObject obj = (JSONObject) questions.get(index);
             String answer = (String) obj.get("answer");
             if (s.equals(answer)){
-                System.out.println("Correct");
+                out.println("Correct");
             }
             else {
-                System.out.println("Incorrect");
+                out.println("Incorrect");
             }
         }
         else {
-            System.out.println("Error: question " + num + " not found");
+            out.println("Error: question " + num + " not found");
         }
     }
 
@@ -228,22 +228,17 @@ public class Server {
 
         String inputLine;
         while ((inputLine = in.readLine()) != null) { //quits because this becomes false when while loop is executed. Whole thing needs to be wrapped in while loop
-            System.out.println(inputLine);
             switch(inputLine.charAt(0)) {
                 case 'p':
-                    System.out.println("put mode");
                     writeQuestion();
                     break;
                 case 'd':
-                    System.out.println("delete mode");
                     deleteQuestion(Integer.parseInt(inputLine.substring(2)));
                     break;
                 case 'g':
-                    System.out.println("get mode");
                     getQuestion(Integer.parseInt(inputLine.substring(2)));
                     break;
                 case 'r':
-                    System.out.println("get random mode");
                     getRandomQuestion();
                     break;
                 case 'c':
@@ -253,7 +248,7 @@ public class Server {
                     //shutDownServer();
                     break;
                 default:
-                    System.out.println("An unrecognized command was passed to the server");
+                    System.out.println("An unrecognized command was passed to the server"); //for logging purposes
                     //shutDownServer();
                     break;
             }
