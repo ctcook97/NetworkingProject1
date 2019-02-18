@@ -108,11 +108,14 @@ public class Server {
     }
 
     //Need to switch to print on client side
-    //Error handling if there are no questions in bank?
     @SuppressWarnings("unchecked")
     public static void getRandomQuestion(){
-
         try {
+            if (questions.size() == 0){
+                out.println("No questions we found in the bank.");
+                out.println(".");
+                return;
+            }
             int num = (int) (Math.random()*questions.size());
             JSONObject obj = (JSONObject) questions.get(num);
             out.println((String) obj.get("text"));
@@ -211,6 +214,9 @@ public class Server {
         }
     }
 
+    public static void shutDownServer(){
+
+    }
     //TO IMPLEMENT
     //close server
     
@@ -245,12 +251,10 @@ public class Server {
                     checkQuestion(inputLine);
                     break;
                 case 'k':
-                    //shutDownServer();
-                    break;
+                    return;
                 default:
                     System.out.println("An unrecognized command was passed to the server"); //for logging purposes
-                    //shutDownServer();
-                    break;
+                    return;
             }
         }        
 

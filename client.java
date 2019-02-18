@@ -28,7 +28,6 @@ public class Client {
     public static void putMode(){
         
         try {
-            System.out.println("putMode");
             out.println("p");
             out.println(stdIn.readLine()); //Question tag
             boolean cont = true;
@@ -50,15 +49,10 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-
-
     }
 
     public static void deleteMode(String input){
         try {
-            System.out.println("deleteMode");
             out.println(input);
             System.out.println(in.readLine());
         } catch (IOException e) {
@@ -67,7 +61,6 @@ public class Client {
     }
 
     public static void getMode(String input){
-        System.out.println("getMode");
         out.println(input);
         try {
             String s;
@@ -84,17 +77,22 @@ public class Client {
 
     public static void randomMode(){
         out.println("r");
-        System.out.println("randomMode");
         try {
             String s;
+            boolean questionsFound = true;
             while((s = in.readLine()) != null){
                 if(s.equals(".")) {
                     break;
                 }
                 System.out.println(s);
+                if (s.equals("No questions we found in the bank.")){ //This will not work properly if you put this as a question or answer choice
+                    questionsFound = false;
+                }
             }
-            out.println(stdIn.readLine());
-            System.out.println(in.readLine());
+            if (questionsFound) {
+                out.println(stdIn.readLine());
+                System.out.println(in.readLine());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -109,17 +107,34 @@ public class Client {
         }
     }
 
-    public static void killMode(){
-        out.println("k");
-        System.out.println("killMode");
-    }
-
-    public static void quitMode() {
-        System.out.println("quitMode");
-    }
-
     public static void helpMode() {
-        System.out.println("helpMode");
+        System.out.println("Help mode");
+        System.out.println("Commands: ");
+        System.out.println("Please pay careful attention to the formatting. Incorrect formatting could cause issues.");
+        System.out.println("'p': put question");
+        System.out.println("    Adds a qustion to the bank");
+        System.out.println("    The next line you enter will be the question tags");
+        System.out.println("    Then the next lines you enter will be the question text, until you put a '.' on its own line");
+        System.out.println("    Then enter the answers one by one, starting each with their letter and ending each with a '.' on its own line");
+        System.out.println("    Enter another '.' on its own line when you are done adding answers");
+        System.out.println("    The next line you enter will be the correct answer");
+        System.out.println("    The assigned question number will get printed");
+        System.out.println("'d <number>': delete question");
+        System.out.println("    Question <number> will get deleted.");
+        System.out.println("    Please only use one space and do not include the brackets");
+        System.out.println("'g <number>': get question");
+        System.out.println("    Question <number> and its answers will get printed.");
+        System.out.println("'r': random question");
+        System.out.println("    Prints a random question.");
+        System.out.println("    Enter your answer on the next line and it will tell you if you are right or not");
+        System.out.println("'c <number> <answer>': check question");
+        System.out.println("    Will check if the answer to question <number> is <answer>");
+        System.out.println("'k': Kill Server");
+        System.out.println("    This will also shut down the client");
+        System.out.println("'q': Quit");
+        System.out.println("    This will shut down this program");
+        System.out.println("'h': help");
+        System.out.println("    This will print out the commands");
     }
     
     public static void main(String[] args) throws IOException {
@@ -152,11 +167,12 @@ public class Client {
                     checkMode(userInput);
                     break;
                 case 'k':
-                    killMode();
-                    break;
+                    out.println("k");
+                    System.out.println("Server killed.");
+                    return;
                 case 'q':
-                    quitMode();
-                    break;
+                    System.out.println("Shutting Down");
+                    return;
                 case 'h':
                     helpMode();
                     break;
