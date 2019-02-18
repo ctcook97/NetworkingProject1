@@ -17,3 +17,5 @@ permissions:
 clean:
 	rm qclient
 	rm qserver
+	rm Client.class
+	rm Server.class

@@ -141,7 +141,8 @@ public class Client {
     public static void main(String[] args) throws IOException {
          
         if (args.length != 2) {
-            System.err.println("Usage: java Client <host name> <port number>");
+            System.err.println("Usage: ./qserver <host name> <port number>");
+            System.out.println("If running on same computer as server, just use 'localhost' as hostname");
             System.exit(1);
         }
  
