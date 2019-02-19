@@ -1,0 +1,17 @@
+.\" Manpage for qbank.
+.\" Written by Cameron Cook
+.TH "18 Feb 2019" "qbank man page"
+.SH NAME
+qbank.json - question bank file 
+.SH SYNOPSIS
+This is designed for use with json simple, a library downloaded to communicate between java and json.
+More information on how to use it can be found here - https://code.google.com/archive/p/json-simple/
+You can access it like any other JSON files. It contains an array of questions (each question being a JSON object), having keys "tags", "text", an array of "answers", "answer" for the correct answer, and "number"
+.SH DESCRIPTION
+Stores questions for the server to pull from (or write to). Storage is persistent and this file is updated anytime a question is written or deleted.
+.SH SEE ALSO
+qserver
+.SH BUGS
+No known bugs, but issues with qserver if the file is completely blank when starting up (not an issue if it just contains an empty array, like '[]')
+.SH AUTHOR
+Cameron Cook

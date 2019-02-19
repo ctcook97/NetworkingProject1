@@ -156,7 +156,11 @@ public class Client {
                 continue;
             }
             if(userInput.length() > 1 && userInput.charAt(1) != (' ')){
-                System.out.println("Invalid command");
+                System.out.println("Improper command format. Please type 'h' for help.");
+                continue;
+            }
+            if(Character.isUpperCase(userInput.charAt(0))) {
+                System.out.println("Please use lowercase letters for commands");
                 continue;
             }
             switch(userInput.charAt(0)){

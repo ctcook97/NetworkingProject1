@@ -1,0 +1,17 @@
+.\" Manpage for qserver.
+.\" Written by Cameron Cook
+.TH "18 Feb 2019" "qserver man page"
+.SH NAME
+qserver - Starts up the question bank server 
+.SH SYNOPSIS
+"./qserver"
+.SH DESCRIPTION
+Starts up a server on a random free port. It will print the port when it starts. Designed to be used with qclient, it will respond to its requests for questions accordingly and store questions in the qbank.json file
+.SH OPTIONS
+The qserver does not take any options.
+.SH SEE ALSO
+qclient, qbank
+.SH BUGS
+No known bugs - but not much error handling is done on server side. Improper question formats and requests for questions that are not numbers can crash the server.
+.SH AUTHOR
+Cameron Cook
